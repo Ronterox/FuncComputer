@@ -2,37 +2,36 @@ import { expect, test } from "bun:test";
 
 const printLn = x => console.log(x)
 const toNumber = n => n (i => i + 1) (0)
+const toBool = bool => If (bool) (true) (false)
 
-// number = fn => x
-const add = n => m => fn => x => m (fn) (n (fn) (x))
-const mul = n => m => fn => x => m (n(fn)) (x)
-const exp = n => m => (m (n))
+const Add = n => m => fn => x => m (fn) (n (fn) (x))
+const Mul = n => m => fn => x => m (n(fn)) (x)
+const Exp = n => m => (m (n))
+const Sub = n => m => (m (Pred)) (n)
 
+// type number = fn => x
 const zero = _ => x => x
-const one = f => x => f (x)
-const two = f => x => f (f (x))
-const three = f => x => f (f (f (x)))
-const four = add (two) (two)
-const five = add (three) (two)
-const ten = mul (two) (five)
+const one = fn => x => fn (x)
+const two = fn => x => fn (fn (x))
+const three = fn => x => fn (fn (fn (x)))
+const four = Add (two) (two)
+const five = Add (three) (two)
+const ten = Mul (two) (five)
 
-const succ = add (one)
-const pred = n => fn => x => n (g => h => h (g (fn))) (_ => x) (u => u); // wtf
+const Succ = Add (one)
+const Pred = n => fn => x => n (g => h => h (g (fn))) (_ => x) (u => u); // wtf
 
-const sub = n => m => (m (pred)) (n)
-const toBool = bool => ifThenElse (bool) (true) (false)
-
-// bool = a => b
+// type bool = a => b
 const True = a => _ => a
 const False = _ => b => b
 
-const ifThenElse = bool => Then => Else => bool (Then) (Else)
-const not = bool => ifThenElse (bool) (False) (True)
+const If = bool => a => b => bool (a) (b)
+const Not = bool => a => b => bool (b) (a)
 
-const or = a => b => a (a) (b)
-const and = a => b => a (b) (a)
+const Or = a => b => a (a) (b)
+const And = a => b => a (b) (a)
 
-printLn (toNumber(pred (zero)))
+printLn (toNumber(Pred (zero)))
 
 test("numbers", () => {
     expect(toNumber(zero)).toBe(0)
@@ -42,34 +41,34 @@ test("numbers", () => {
 });
 
 test("add", () => {
-    expect(toNumber(add (two) (two))).toBe(4)
-    expect(toNumber(add (three) (ten))).toBe(13)
+    expect(toNumber(Add (two) (two))).toBe(4)
+    expect(toNumber(Add (three) (ten))).toBe(13)
 });
 
 test("mul", () => {
-    expect(toNumber(mul (two) (two))).toBe(4)
-    expect(toNumber(mul (three) (two))).toBe(6)
+    expect(toNumber(Mul (two) (two))).toBe(4)
+    expect(toNumber(Mul (three) (two))).toBe(6)
 });
 
 test("exp", () => {
-    expect(toNumber(exp (two) (two))).toBe(4)
-    expect(toNumber(exp (two) (four))).toBe(16)
+    expect(toNumber(Exp (two) (two))).toBe(4)
+    expect(toNumber(Exp (two) (four))).toBe(16)
 });
 
 test("succ", () => {
-    expect(toNumber(succ (zero))).toBe(1)
-    expect(toNumber(succ (one))).toBe(2)
+    expect(toNumber(Succ (zero))).toBe(1)
+    expect(toNumber(Succ (one))).toBe(2)
 });
 
 test("pred", () => {
-    expect(toNumber(pred (zero))).toBe(0)
-    expect(toNumber(pred (one))).toBe(0)
-    expect(toNumber(pred (two))).toBe(1)
+    expect(toNumber(Pred (zero))).toBe(0)
+    expect(toNumber(Pred (one))).toBe(0)
+    expect(toNumber(Pred (two))).toBe(1)
 });
 
 test("sub", () => {
-    expect(toNumber(sub (one) (two))).toBe(0)
-    expect(toNumber(sub (four) (three))).toBe(1)
+    expect(toNumber(Sub (one) (two))).toBe(0)
+    expect(toNumber(Sub (four) (three))).toBe(1)
 });
 
 test("bool", () => {
@@ -78,25 +77,25 @@ test("bool", () => {
 });
 
 test("not", () => {
-    expect(toBool(not (True))).toBe(false)
-    expect(toBool(not (False))).toBe(true)
+    expect(toBool(Not (True))).toBe(false)
+    expect(toBool(Not (False))).toBe(true)
 });
 
 test("or", () => {
-    expect(toBool(or (True) (True))).toBe(true)
-    expect(toBool(or (True) (False))).toBe(true)
-    expect(toBool(or (False) (True))).toBe(true)
-    expect(toBool(or (False) (False))).toBe(false)
+    expect(toBool(Or (True) (True))).toBe(true)
+    expect(toBool(Or (True) (False))).toBe(true)
+    expect(toBool(Or (False) (True))).toBe(true)
+    expect(toBool(Or (False) (False))).toBe(false)
 });
 
 test("and", () => {
-    expect(toBool(and (True) (True))).toBe(true)
-    expect(toBool(and (True) (False))).toBe(false)
-    expect(toBool(and (False) (True))).toBe(false)
-    expect(toBool(and (False) (False))).toBe(false)
+    expect(toBool(And (True) (True))).toBe(true)
+    expect(toBool(And (True) (False))).toBe(false)
+    expect(toBool(And (False) (True))).toBe(false)
+    expect(toBool(And (False) (False))).toBe(false)
 });
 
-test("ifThenElse", () => {
-    expect(toBool(ifThenElse (True) (True) (False))).toBe(true)
-    expect(toBool(ifThenElse (False) (True) (False))).toBe(false)
+test("if", () => {
+    expect(toBool(If (True) (True) (False))).toBe(true)
+    expect(toBool(If (False) (True) (False))).toBe(false)
 });
