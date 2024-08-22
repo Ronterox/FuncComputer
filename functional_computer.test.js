@@ -30,6 +30,7 @@ const Not = bool => a => b => bool (b) (a)
 
 const Or = a => b => a (a) (b)
 const And = a => b => a (b) (a)
+const Xor = a => b => a (Not (b)) (b)
 
 printLn (toNumber(Pred (zero)))
 
@@ -76,6 +77,11 @@ test("bool", () => {
     expect(toBool(False)).toBe(false)
 });
 
+test("if", () => {
+    expect(toBool(If (True) (True) (False))).toBe(true)
+    expect(toBool(If (False) (True) (False))).toBe(false)
+});
+
 test("not", () => {
     expect(toBool(Not (True))).toBe(false)
     expect(toBool(Not (False))).toBe(true)
@@ -95,7 +101,9 @@ test("and", () => {
     expect(toBool(And (False) (False))).toBe(false)
 });
 
-test("if", () => {
-    expect(toBool(If (True) (True) (False))).toBe(true)
-    expect(toBool(If (False) (True) (False))).toBe(false)
+test("xor", () => {
+    expect(toBool(Xor (True) (True))).toBe(false)
+    expect(toBool(Xor (True) (False))).toBe(true)
+    expect(toBool(Xor (False) (True))).toBe(true)
+    expect(toBool(Xor (False) (False))).toBe(false)
 });
