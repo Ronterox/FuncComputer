@@ -1,38 +1,5 @@
 import { expect, test } from "bun:test";
-
-const printLn = x => console.log(x)
-const toNumber = n => n (i => i + 1) (0)
-const toBool = bool => If (bool) (true) (false)
-
-const Add = n => m => fn => x => m (fn) (n (fn) (x))
-const Mul = n => m => fn => x => m (n(fn)) (x)
-const Exp = n => m => (m (n))
-const Sub = n => m => (m (Pred)) (n)
-
-// type number = fn => x
-const zero = _ => x => x
-const one = fn => x => fn (x)
-const two = fn => x => fn (fn (x))
-const three = fn => x => fn (fn (fn (x)))
-const four = Add (two) (two)
-const five = Add (three) (two)
-const ten = Mul (two) (five)
-
-const Succ = Add (one)
-const Pred = n => fn => x => n (g => h => h (g (fn))) (_ => x) (u => u); // wtf
-
-// type bool = a => b
-const True = a => _ => a
-const False = _ => b => b
-
-const If = bool => a => b => bool (a) (b)
-const Not = bool => a => b => bool (b) (a)
-
-const Or = a => b => a (a) (b)
-const And = a => b => a (b) (a)
-const Xor = a => b => a (Not (b)) (b)
-
-printLn (toNumber(Pred (zero)))
+import { toNumber, toBool, one, two, three, four, five, ten, Add, Sub, Mul, Exp, zero, Pred, Succ, If, Not, Or, And, Xor, Xnor, isZero, isEqualOrLess, isEqual, isGreater, True, False } from "./functional_computer";
 
 test("numbers", () => {
     expect(toNumber(zero)).toBe(0)
@@ -106,4 +73,35 @@ test("xor", () => {
     expect(toBool(Xor (True) (False))).toBe(true)
     expect(toBool(Xor (False) (True))).toBe(true)
     expect(toBool(Xor (False) (False))).toBe(false)
+});
+
+test("xnor", () => {
+    expect(toBool(Xnor (True) (True))).toBe(true)
+    expect(toBool(Xnor (True) (False))).toBe(false)
+    expect(toBool(Xnor (False) (True))).toBe(false)
+    expect(toBool(Xnor (False) (False))).toBe(true)
+});
+
+test("isZero", () => {
+    expect(toBool(isZero (zero))).toBe(true)
+    expect(toBool(isZero (one))).toBe(false)
+    expect(toBool(isZero (ten))).toBe(false)
+});
+
+test("isEqualOrLess", () => {
+    expect(toBool(isEqualOrLess (ten) (five))).toBe(false)
+    expect(toBool(isEqualOrLess (four) (four))).toBe(true)
+    expect(toBool(isEqualOrLess (five) (ten))).toBe(true)
+});
+
+test("isEqual", () => {
+    expect(toBool(isEqual (ten) (five))).toBe(false)
+    expect(toBool(isEqual (four) (four))).toBe(true)
+    expect(toBool(isEqual (five) (ten))).toBe(false)
+});
+
+test("isGreater", () => {
+    expect(toBool(isGreater (ten) (five))).toBe(true)
+    expect(toBool(isGreater (four) (four))).toBe(false)
+    expect(toBool(isGreater (five) (ten))).toBe(false)
 });
