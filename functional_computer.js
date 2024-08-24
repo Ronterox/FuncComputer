@@ -1,10 +1,17 @@
+// Consumers
+
+// type result = x => _ => transform (x)
+const printLn = x => _ => console.log(x)
+const None = x => _ => x
+
+export { printLn, None };
+
 // Transformations
 
-const printLn = x => console.log(x)
 const toNumber = n => n (i => i + 1) (0)
 const toBool = bool => If (bool) (true) (false)
 
-export { printLn, toNumber, toBool };
+export { toNumber, toBool };
 
 // Operations
 
@@ -61,3 +68,21 @@ const isEqual = n => m => And (isZero (Sub (n) (m))) (isZero (Sub (m) (n)))
 const isGreater = n => m => Not (isEqualOrLess (n) (m))
 
 export { isZero, isEqualOrLess, isEqual, isGreater };
+
+// Pairs
+
+// type pair = a => b => fn
+const Pair = a => b => fn => fn (a) (b)
+const First = p => p (True)
+const Second = p => p (False)
+
+export { Pair, First, Second };
+
+// Lists
+
+const List = Pair (True) (True)
+const Prepend = a => l => l (x => y => Pair (a) (Pair (x) (y)))
+const Head = First
+const Tail = Second
+
+export { List, Prepend, Head, Tail };

@@ -1,3 +1,8 @@
-import { printLn, toBool, two, True } from "./functional_computer"
+import { Head, List, one, Prepend, printLn, Tail, two } from "./functional_computer";
 
-two (printLn (toBool (True)))
+
+const myList = Prepend (two) (Prepend (one) (List))
+
+const main = printLn(Head (Tail (myList)))
+
+main()
